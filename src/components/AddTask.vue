@@ -37,11 +37,11 @@
         },
         methods: {
             addTask(task = '') {
-                this.$emit('addTask', task);
+                this.$emit('emitAddTask', task);
                 this.task = '';
             },
             removeAll() {
-                this.$emit('removeAll');
+                this.$emit('emitRemoveAll');
             }
         }
     }

@@ -1,30 +1,35 @@
 <template>
     <div>
         <h3>ToDo Tasks</h3>
-        <div v-if="todoTasks.length > 0">
-            <div class="c-progress text-center">
-                {{todoTasks.length}} / {{limit}}
-                <div :style="{width: progressWidth()}" class="c-progress__bar c-progress__bar--todo"></div>
+        <transition name="fade" mode="out-in">
+            <div v-if="todoTasks.length > 0" key="list">
+                <div class="c-progress text-center">
+                    {{todoTasks.length}} / {{limit}}
+                    <div :style="{width: progressWidth()}" class="c-progress__bar c-progress__bar--todo"></div>
+                </div>
+                <ul class="list-group">
+                    <transition-group name="fly">
+                        <li v-for="(task, index) in todoTasks"
+                            :key="task"
+                            :class="addListItem()"
+                            class="list-group-item">
+                            <span>{{task}}</span>
+                            <div>
+                                <button class="btn btn-success" @click="done({task, index})">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                                <button class="btn btn-danger" @click="remove(index)">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </div>
+                        </li>
+                    </transition-group>
+                </ul>
             </div>
-            <ul class="list-group">
-                <li v-for="(task, index) in todoTasks"
-                    class="list-group-item"
-                    :class="addListItem()">
-                    <span>{{task}}</span>
-                    <div>
-                        <button class="btn btn-success" @click="done({task, index})">
-                            <i class="fa fa-check"></i>
-                        </button>
-                        <button class="btn btn-danger" @click="remove(index)">
-                            <i class="fa fa-remove"></i>
-                        </button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div v-else>
-            <p>No tasks todo</p>
-        </div>
+            <div v-else key="empty">
+                <p>Empty ToDo list</p>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -42,13 +47,13 @@
                 return `${this.todoTasks.length / this.limit * 100}%`;
             },
             remove(index) {
-                this.$emit('remove', index);
+                this.$emit('emitRemove', index);
             },
             done(object) {
-                this.$emit('done', object);
+                this.$emit('emitDone', object);
             },
             addListItem() {
-                return this.todoTasks.length > 1 ? 'list-group-item-danger' : 'list-group-item-success';
+                return this.todoTasks.length > 4 ? 'list-group-item-danger' : 'list-group-item-success';
             }
         }
     }
